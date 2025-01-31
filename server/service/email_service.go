@@ -37,7 +37,7 @@ func (s *EmailService) SendVerificationEmail(user *models.User) error {
 	}
 
 	// Ссылка для подтверждения email
-	verificationURL := fmt.Sprintf("http://localhost:8080/verify?token=%s&email=%s", token, user.Email)
+	verificationURL := fmt.Sprintf("https://fitnesshub-qdoy.onrender.com/verify?token=%s&email=%s", token, user.Email)
 
 	// Тема и тело письма
 	subject := "Please confirm your email address"
