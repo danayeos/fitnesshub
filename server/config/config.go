@@ -3,6 +3,7 @@ package config
 
 import (
 	"os"
+	"strings"
 )
 
 // Конфигурация для подключения к базе данных
@@ -19,7 +20,7 @@ var AppConfig Config
 // Загрузка конфигурации из переменных окружения
 func LoadConfig() {
 	// Проверяем, есть ли DATABASE_URL в переменных окружения (Render его использует)
-	databaseURL := os.Getenv("DATABASE_URL")
+	databaseURL := strings.TrimSpace(os.Getenv("DATABASE_URL"))
 	if databaseURL != "" {
 		AppConfig = Config{
 			DBHost:     databaseURL, // Сохраняем полный URL
