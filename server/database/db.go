@@ -16,12 +16,19 @@ var DB *gorm.DB
 // ConnectDatabase initializes the database connection
 func ConnectDatabase() {
 	// Form the connection string with actual configuration values
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		config.AppConfig.DBHost,
-		config.AppConfig.DBUser,
-		config.AppConfig.DBPassword,
-		config.AppConfig.DBName,
-		config.AppConfig.DBPort)
+	var dsn string
+	if config.AppConfig.DBHost != "" && config.AppConfig.DBUser == "" {
+		// Если используется DATABASE_URL (Render)
+		dsn = config.AppConfig.DBHost
+	} else {
+		// Если используется локальное подключение
+		dsn = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+			config.AppConfig.DBHost,
+			config.AppConfig.DBUser,
+			config.AppConfig.DBPassword,
+			config.AppConfig.DBName,
+			config.AppConfig.DBPort)
+	}
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})

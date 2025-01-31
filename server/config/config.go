@@ -5,25 +5,38 @@ import (
 	"os"
 )
 
-// Конфигурация для подключения к базе данных	
+// Конфигурация для подключения к базе данных
 type Config struct {
-	DBHost             string
-	DBPort             string
-	DBUser             string
-	DBPassword         string
-	DBName             string
+	DBHost     string
+	DBPort     string
+	DBUser     string
+	DBPassword string
+	DBName     string
 }
 
 var AppConfig Config
 
 // Загрузка конфигурации из переменных окружения
 func LoadConfig() {
-	AppConfig = Config{
-		DBHost:             getEnv("DB_HOST", "localhost"),
-		DBPort:             getEnv("DB_PORT", "5432"),
-		DBUser:             getEnv("DB_USER", "postgres"),
-		DBPassword:         getEnv("DB_PASSWORD", "123456"),
-		DBName:             getEnv("DB_NAME", "mydb"),	
+	// Проверяем, есть ли DATABASE_URL в переменных окружения (Render его использует)
+	databaseURL := os.Getenv("DATABASE_URL")
+	if databaseURL != "" {
+		AppConfig = Config{
+			DBHost:     databaseURL, // Сохраняем полный URL
+			DBPort:     "",
+			DBUser:     "",
+			DBPassword: "",
+			DBName:     "",
+		}
+	} else {
+		// Если переменной нет, используем локальные настройки
+		AppConfig = Config{
+			DBHost:     getEnv("DB_HOST", "localhost"),
+			DBPort:     getEnv("DB_PORT", "5432"),
+			DBUser:     getEnv("DB_USER", "postgres"),
+			DBPassword: getEnv("DB_PASSWORD", "123456"),
+			DBName:     getEnv("DB_NAME", "mydb"),
+		}
 	}
 }
 
